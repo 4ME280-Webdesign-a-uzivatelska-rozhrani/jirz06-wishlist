@@ -1,5 +1,3 @@
-Skvěle! Tady je připravený **GitHub-ready Markdown soubor** – stačí ho uložit jako `README.md` nebo jiný `.md` soubor:
-
 ```markdown
 # 🎁 Tipy na narozeninové dárky
 
