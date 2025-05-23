@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Narozeninové dárky</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h1, h2, h3 {
+      color: #c0392b;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .loading {
+      font-style: italic;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎁 Narozeninové dárky</h1>
+  <div id="content">
+    <p class="loading">Načítám dárky z JSONBin…</p>
+  </div>
+
+  <!-- Marked.js pro převod Markdown na HTML -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const BIN_ID = '683061b78960c979a5a01dba';
+    const API_KEY = '$2a$10$qNV2tGipYXuFW3167xxgveC1QFEU7D.1fB.aARUKWmvB2htsyVee6';
+
+    async function loadMarkdownFromJSONBin() {
+      try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+          headers: {
+            'X-Master-Key': API_KEY
+          }
+        });
+
+        if (!res.ok) throw new Error('Chyba při načítání z JSONBin.');
+        const json = await res.json();
+        const markdown = json.record.markdown || '';
+        document.getElementById('content').innerHTML = marked.parse(markdown);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('content').innerHTML = '<p style="color:red;">Nepodařilo se načíst dárky.</p>';
+      }
+    }
+
+    loadMarkdownFromJSONBin();
+  </script>
+</body>
+</html>
