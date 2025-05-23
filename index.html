@@ -1,63 +1,120 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Narozeninové dárky</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dárky k narozeninám</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      color: #333;
+      font-family: sans-serif;
       max-width: 800px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: auto;
+      padding: 1rem;
+      background: #f7f7f7;
+      color: #333;
     }
-    h1, h2, h3 {
-      color: #c0392b;
+    .gift {
+      background: white;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
     img {
       max-width: 100%;
-      border-radius: 8px;
-      margin: 1rem 0;
+      border-radius: 6px;
+      margin-top: 0.5rem;
     }
-    .loading {
-      font-style: italic;
-      color: #888;
+    input {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 0.5rem;
+      background: #007bff;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .saved {
+      color: green;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <h1>🎁 Narozeninové dárky</h1>
-  <div id="content">
-    <p class="loading">Načítám dárky z JSONBin…</p>
-  </div>
 
-  <!-- Marked.js pro převod Markdown na HTML -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    const BIN_ID = '683061b78960c979a5a01dba';
-    const API_KEY = '$2a$10$qNV2tGipYXuFW3167xxgveC1QFEU7D.1fB.aARUKWmvB2htsyVee6';
+<h1>🎁 Narozeninové dárky</h1>
+<div id="gift-list">Načítání dárků…</div>
 
-    async function loadMarkdownFromJSONBin() {
-      try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-          headers: {
-            'X-Master-Key': API_KEY
-          }
-        });
+<script>
+const BIN_ID = '683061b78960c979a5a01dba';
+const MASTER_KEY = '$2a$10$qNV2tGipYXuFW3167xxgveC1QFEU7D.1fB.aARUKWmvB2htsyVee6';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const HEADERS = {
+  'X-Master-Key': MASTER_KEY,
+  'Content-Type': 'application/json'
+};
 
-        if (!res.ok) throw new Error('Chyba při načítání z JSONBin.');
-        const json = await res.json();
-        const markdown = json.record.markdown || '';
-        document.getElementById('content').innerHTML = marked.parse(markdown);
-      } catch (err) {
-        console.error(err);
-        document.getElementById('content').innerHTML = '<p style="color:red;">Nepodařilo se načíst dárky.</p>';
-      }
-    }
+let darky = [];
 
-    loadMarkdownFromJSONBin();
-  </script>
+async function nactiDarky() {
+  try {
+    const res = await fetch(`${BIN_URL}/latest`, { headers: HEADERS });
+    const data = await res.json();
+    darky = data.record;
+    zobrazDarky();
+  } catch (e) {
+    document.getElementById('gift-list').innerHTML = 'Chyba při načítání dat.';
+    console.error(e);
+  }
+}
+
+function zobrazDarky() {
+  const container = document.getElementById('gift-list');
+  container.innerHTML = '';
+  darky.forEach((dar, idx) => {
+    const el = document.createElement('div');
+    el.className = 'gift';
+    el.innerHTML = `
+      <h2>${dar.nazev}</h2>
+      <p><strong>Cena:</strong> ${dar.cena}</p>
+      <a href="${dar.odkaz}" target="_blank">Odkaz na dárek</a>
+      <img src="${dar.obrazek}" alt="${dar.nazev}">
+      <p><strong>Zamluveno:</strong> ${dar.koupenoKym || 'zatím nikým'}</p>
+      <input type="text" placeholder="Zadej své jméno" id="kupujici-${idx}" value="${dar.koupenoKym || ''}">
+      <button onclick="ulozKupujiciho(${idx})">Uložit</button>
+      <p class="saved" id="stav-${idx}"></p>
+    `;
+    container.appendChild(el);
+  });
+}
+
+async function ulozKupujiciho(idx) {
+  const jmeno = document.getElementById(`kupujici-${idx}`).value.trim();
+  darky[idx].koupenoKym = jmeno;
+
+  try {
+    const res = await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: HEADERS,
+      body: JSON.stringify(darky)
+    });
+    if (!res.ok) throw new Error('Ukládání selhalo');
+    document.getElementById(`stav-${idx}`).textContent = 'Uloženo ✔️';
+  } catch (e) {
+    document.getElementById(`stav-${idx}`).textContent = 'Chyba při ukládání';
+    console.error(e);
+  }
+}
+
+nactiDarky();
+</script>
+
 </body>
 </html>
