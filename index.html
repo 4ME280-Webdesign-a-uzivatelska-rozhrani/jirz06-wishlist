@@ -41,7 +41,7 @@
 
     async function loadMarkdownFromJSONBin() {
       try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
           headers: {
             'X-Master-Key': API_KEY
           }
