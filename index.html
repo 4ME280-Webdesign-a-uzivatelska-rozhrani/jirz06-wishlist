@@ -9,6 +9,13 @@
       font-family: sans-serif;
       padding: 20px;
       background: #f9f9f9;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
     }
 
     h1 {
@@ -25,9 +32,11 @@
     }
 
     .gift img {
-      max-width: 100%;
+      max-width: 300px;
       height: auto;
       border-radius: 5px;
+      display: block;
+      margin-top: 10px;
     }
 
     .gift input {
@@ -51,9 +60,10 @@
 </head>
 <body>
 
-  <h1>🎁 Tipy na narozeninové dárky</h1>
-
-  <div id="gift-container"></div>
+  <div class="container">
+    <h1>🎁 Tipy na narozeninové dárky</h1>
+    <div id="gift-container"></div>
+  </div>
 
 <script>
   const API_URL = "https://jirz06-proxy.jirz06.workers.dev";
