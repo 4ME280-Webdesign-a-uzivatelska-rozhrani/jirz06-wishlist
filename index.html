@@ -5,7 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🎁 Tipy na narozeninové dárky</title>
   <style>
-    /* ...tvoje CSS zůstává stejné... */
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .gift {
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      background: #fff;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .gift img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .gift input {
+      margin-top: 5px;
+      padding: 5px;
+      width: 100%;
+    }
+
+    .gift button {
+      margin-top: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .koupeno {
+      margin-top: 10px;
+      font-style: italic;
+      color: green;
+    }
   </style>
 </head>
 <body>
@@ -15,10 +56,8 @@
   <div id="gift-container"></div>
 
 <script>
-  // Změň API_URL na URL tvého Workeru, např:
-
-const API_URL = "https://jirz06-proxy.jirz06.workers.dev";
-const BIN_ID = "683061b78960c979a5a01dba"; 
+  const API_URL = "https://jirz06-proxy.jirz06.workers.dev";
+  const BIN_ID = "683061b78960c979a5a01dba";
 
   async function nactiDarky() {
     try {
@@ -30,13 +69,18 @@ const BIN_ID = "683061b78960c979a5a01dba";
       const container = document.getElementById('gift-container');
       container.innerHTML = '';
 
-      darky.forEach(darek => {
+      darky.forEach((darek, index) => {
         const div = document.createElement('div');
         div.className = 'gift';
         div.innerHTML = `
-          <a href="${darek.odkaz}" target="_blank" rel="noopener noreferrer">${darek.nazev}</a>
+          <a href="${darek.odkaz}" target="_blank" rel="noopener noreferrer"><strong>${darek.nazev}</strong></a>
           <p><strong>Cena:</strong> ${darek.cena}</p>
           <img src="${darek.obrazek}" alt="${darek.nazev}">
+          <div class="koupeno" id="koupeno-${index}">
+            ${darek.koupenoKym ? `✅ Koupeno: ${darek.koupenoKym}` : '🛍️ Ještě nikým nekoupeno'}
+          </div>
+          <input type="text" placeholder="Zapiš své jméno..." id="input-${index}">
+          <button onclick="zapisKupce(${index})">Zapsat se jako kupující</button>
         `;
         container.appendChild(div);
       });
@@ -46,9 +90,15 @@ const BIN_ID = "683061b78960c979a5a01dba";
     }
   }
 
+  function zapisKupce(index) {
+    const jmeno = document.getElementById(`input-${index}`).value.trim();
+    if (jmeno) {
+      document.getElementById(`koupeno-${index}`).innerText = `✅ Koupeno: ${jmeno}`;
+    }
+  }
+
   window.addEventListener('DOMContentLoaded', nactiDarky);
 </script>
-
 
 </body>
 </html>
