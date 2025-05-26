@@ -2,9 +2,9 @@
 export default {
   async fetch(request) {
     const url = new URL(request.url)
-    const binId = url.searchParams.get("id") || "TVUJ_JSONBIN_ID"
+    const binId = url.searchParams.get("683061b78960c979a5a01dba") || "TVUJ_JSONBIN_ID"
     const method = request.method
-    const apiKey = "TVUJ_JSONBIN_API_KLIC" // NEUKLÁDEJ DO FRONTENDU
+    const apiKey = "$2a$10$qNV2tGipYXuFW3167xxgveC1QFEU7D.1fB.aARUKWmvB2htsyVee6" // NEUKLÁDEJ DO FRONTENDU
 
     const endpoint = `https://api.jsonbin.io/v3/b/${binId}`
     const headers = {
