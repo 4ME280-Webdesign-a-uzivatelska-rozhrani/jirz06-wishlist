@@ -48,13 +48,14 @@
   <div id="gift-container"></div>
 
   <script>
-    const API_URL = "https://TVOJE_PROXY_URL.workers.dev"  // <- sem napiš svoji proxy adresu
-    const BIN_ID = "TVŮJ_BIN_ID" // <- sem napiš svůj bin ID z jsonbin.io
+    // Změň tyto dvě hodnoty na své vlastní:
+    const API_URL = "https://jirz06-proxy.jirz06.workers.dev";  // adresa tvého Cloudflare Worker proxy
+    const BIN_ID = "683061b78960c979a5a01dba"; // ID tvého JSONBin binu
 
     async function nactiDarky() {
       try {
-        const res = await fetch(`${API_URL}?id=${BIN_ID}`);
-        const json = await res.json();
+        const response = await fetch(`${API_URL}?id=${BIN_ID}`);
+        const json = await response.json();
         const darky = json.record || [];
 
         const container = document.getElementById('gift-container');
@@ -64,19 +65,20 @@
           const div = document.createElement('div');
           div.className = 'gift';
           div.innerHTML = `
-            <a href="${darek.url}" target="_blank">${darek.nazev}</a>
+            <a href="${darek.url}" target="_blank" rel="noopener noreferrer">${darek.nazev}</a>
             <p><strong>Cena:</strong> ${darek.cena}</p>
             <img src="${darek.obrazek}" alt="${darek.nazev}">
           `;
           container.appendChild(div);
         });
-      } catch (e) {
-        console.error("Chyba při načítání dat:", e);
+      } catch (error) {
+        console.error("Chyba při načítání dat:", error);
         document.getElementById('gift-container').innerHTML = `<p>⚠️ Nepodařilo se načíst dárky.</p>`;
       }
     }
 
     window.addEventListener('DOMContentLoaded', nactiDarky);
   </script>
+
 </body>
 </html>
