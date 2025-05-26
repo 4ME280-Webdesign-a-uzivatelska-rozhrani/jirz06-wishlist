@@ -45,35 +45,38 @@
 
   <h1>🎁 Tipy na narozeninové dárky</h1>
 
-  <div class="gift">
-    <a href="https://www.apple.com/v/apple-watch-se/s/images/overview/hero/hero__gk2727ue87qm_large_2x.jpg" target="_blank">Apple Watch SE</a>
-    <p><strong>Cena:</strong> cca 7 490 Kč</p>
-    <img src="https://www.apple.com/v/apple-watch-se/s/images/overview/hero/hero__gk2727ue87qm_large_2x.jpg" alt="Apple Watch SE">
-  </div>
+  <div id="gift-container"></div>
 
-  <div class="gift">
-    <a href="https://www.fischer.cz/getmedia/80f3e455-7695-4ece-a98c-2e282ed2f52d/mexiko-mexiko-tulum-0_1200x0.jpg.aspx?maxsidesize=1200&resizemode=force" target="_blank">Zážitek: Dovolená v Tulumu, Mexiko</a>
-    <p><strong>Cena:</strong> cca 35 000 – 50 000 Kč za týdenní pobyt</p>
-    <img src="https://www.fischer.cz/getmedia/80f3e455-7695-4ece-a98c-2e282ed2f52d/mexiko-mexiko-tulum-0_1200x0.jpg.aspx?maxsidesize=1200&resizemode=force" alt="Tulum">
-  </div>
+  <script>
+    const API_URL = "https://TVOJE_PROXY_URL.workers.dev"  // <- sem napiš svoji proxy adresu
+    const BIN_ID = "TVŮJ_BIN_ID" // <- sem napiš svůj bin ID z jsonbin.io
 
-  <div class="gift">
-    <a href="https://www.alo.cz/media/product_image/ALO-19-218-117275_324911184R.KK1_N.PNG.1920x968_q85ss0_background-%23fff.jpg" target="_blank">Personalizovaný šperk ALO Diamonds</a>
-    <p><strong>Cena:</strong> cca 5 000 – 15 000 Kč</p>
-    <img src="https://www.alo.cz/media/product_image/ALO-19-218-117275_324911184R.KK1_N.PNG.1920x968_q85ss0_background-%23fff.jpg" alt="ALO šperk">
-  </div>
+    async function nactiDarky() {
+      try {
+        const res = await fetch(`${API_URL}?id=${BIN_ID}`);
+        const json = await res.json();
+        const darky = json.record || [];
 
-  <div class="gift">
-    <a href="https://cdn.notinoimg.com/detail_main_lq/valentino/3614272761445_03-o/born-in-roma-donna___230925.jpg" target="_blank">Valentino Born in Roma Donna parfém</a>
-    <p><strong>Cena:</strong> cca 2 500 Kč / 100 ml</p>
-    <img src="https://cdn.notinoimg.com/detail_main_lq/valentino/3614272761445_03-o/born-in-roma-donna___230925.jpg" alt="Valentino parfém">
-  </div>
+        const container = document.getElementById('gift-container');
+        container.innerHTML = '';
 
-  <div class="gift">
-    <a href="https://cdn.kudyznudy.cz/files/83/8307d1f5-2a55-46b7-98fa-431af20094cb.jpg?v=20250326131940" target="_blank">Designová dekorace – Medúza v akváriu</a>
-    <p><strong>Cena:</strong> cca 1 200 Kč</p>
-    <img src="https://cdn.kudyznudy.cz/files/83/8307d1f5-2a55-46b7-98fa-431af20094cb.jpg?v=20250326131940" alt="Medúza dekorace">
-  </div>
+        darky.forEach(darek => {
+          const div = document.createElement('div');
+          div.className = 'gift';
+          div.innerHTML = `
+            <a href="${darek.url}" target="_blank">${darek.nazev}</a>
+            <p><strong>Cena:</strong> ${darek.cena}</p>
+            <img src="${darek.obrazek}" alt="${darek.nazev}">
+          `;
+          container.appendChild(div);
+        });
+      } catch (e) {
+        console.error("Chyba při načítání dat:", e);
+        document.getElementById('gift-container').innerHTML = `<p>⚠️ Nepodařilo se načíst dárky.</p>`;
+      }
+    }
 
+    window.addEventListener('DOMContentLoaded', nactiDarky);
+  </script>
 </body>
 </html>
