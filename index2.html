@@ -55,6 +55,7 @@
     async function nactiDarky() {
       try {
         const response = await fetch(`${API_URL}?id=${BIN_ID}`);
+        if (!response.ok) throw new Error("Chyba při načítání dat");
         const json = await response.json();
         const darky = json.record || [];
 
