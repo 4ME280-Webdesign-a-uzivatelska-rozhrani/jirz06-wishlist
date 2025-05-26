@@ -14,39 +14,40 @@
 
   <div id="gift-container"></div>
 
-  <script>
-    // Změň API_URL na URL tvého Workeru, např:
-    const API_URL = "jirz06-proxy.jirz06.workers.dev";  // <- tady správná adresa
-    const BIN_ID = "683061b78960c979a5a01dba"; 
+<script>
+  // Změň API_URL na URL tvého Workeru, např:
+  const API_URL = "jirz06-proxy.jirz06.workers.dev";  // <- tady správná adresa
+  const BIN_ID = "683061b78960c979a5a01dba"; 
 
-    async function nactiDarky() {
-      try {
-        const response = await fetch(`${API_URL}?id=${BIN_ID}`);
-        if (!response.ok) throw new Error("Chyba při načítání dat");
-        const json = await response.json();
-        const darky = json.record || [];
+  async function nactiDarky() {
+    try {
+      const response = await fetch(`${API_URL}?id=${BIN_ID}`);
+      if (!response.ok) throw new Error("Chyba při načítání dat");
+      const json = await response.json();
+      const darky = json.record || [];
 
-        const container = document.getElementById('gift-container');
-        container.innerHTML = '';
+      const container = document.getElementById('gift-container');
+      container.innerHTML = '';
 
-        darky.forEach(darek => {
-          const div = document.createElement('div');
-          div.className = 'gift';
-          div.innerHTML = `
-            <a href="${darek.url}" target="_blank" rel="noopener noreferrer">${darek.nazev}</a>
-            <p><strong>Cena:</strong> ${darek.cena}</p>
-            <img src="${darek.obrazek}" alt="${darek.nazev}">
-          `;
-          container.appendChild(div);
-        });
-      } catch (error) {
-        console.error("Chyba při načítání dat:", error);
-        document.getElementById('gift-container').innerHTML = `<p>⚠️ Nepodařilo se načíst dárky.</p>`;
-      }
+      darky.forEach(darek => {
+        const div = document.createElement('div');
+        div.className = 'gift';
+        div.innerHTML = `
+          <a href="${darek.odkaz}" target="_blank" rel="noopener noreferrer">${darek.nazev}</a>
+          <p><strong>Cena:</strong> ${darek.cena}</p>
+          <img src="${darek.obrazek}" alt="${darek.nazev}">
+        `;
+        container.appendChild(div);
+      });
+    } catch (error) {
+      console.error("Chyba při načítání dat:", error);
+      document.getElementById('gift-container').innerHTML = `<p>⚠️ Nepodařilo se načíst dárky.</p>`;
     }
+  }
 
-    window.addEventListener('DOMContentLoaded', nactiDarky);
-  </script>
+  window.addEventListener('DOMContentLoaded', nactiDarky);
+</script>
+
 
 </body>
 </html>
