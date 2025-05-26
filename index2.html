@@ -5,40 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🎁 Tipy na narozeninové dárky</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      color: #333;
-      padding: 2rem;
-      max-width: 900px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      color: #d35400;
-    }
-    .gift {
-      background: #fff;
-      padding: 1.5rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-    .gift img {
-      max-width: 100%;
-      border-radius: 8px;
-      margin-top: 1rem;
-    }
-    .gift a {
-      font-weight: bold;
-      font-size: 1.1rem;
-      color: #2980b9;
-      text-decoration: none;
-    }
-    .gift p {
-      font-size: 1rem;
-      color: #2c3e50;
-    }
+    /* ...tvoje CSS zůstává stejné... */
   </style>
 </head>
 <body>
@@ -48,9 +15,9 @@
   <div id="gift-container"></div>
 
   <script>
-    // Změň tyto dvě hodnoty na své vlastní:
-    const API_URL = "https://jirz06-proxy.jirz06.workers.dev";  // adresa tvého Cloudflare Worker proxy
-    const BIN_ID = "683061b78960c979a5a01dba"; // ID tvého JSONBin binu
+    // Změň API_URL na URL tvého Workeru, např:
+    const API_URL = "https://tvuj-worker.nazev.workers.dev";  // <- tady správná adresa
+    const BIN_ID = "683061b78960c979a5a01dba"; 
 
     async function nactiDarky() {
       try {
